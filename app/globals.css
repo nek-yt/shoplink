@@ -1,26 +1,277 @@
 @import "tailwindcss";
 
+/* dark:… classes apply when <html data-theme="dark"> (set from the Appearance setting, see components/theme.tsx). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Editorial. Light is a warm off-white page with white cards and near-black ink; dark is a deep neutral with
+ * soft white text. Calm on purpose: the photos bring the colour, violet marks what you can act on.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --surface: #f6f4ef;
+  --raised: #ffffff;
+  --fg: #151412;
+  --line: #e3dfd6;
+  --soft: #eeebe4;
+  --muted: #6e695f;
+  --skeleton: #e8e4db;
+  --photo: #ece8e0;
+  --danger: #b93a2b;
+  --brand: #4b34e3;
+  --brand-dark: #3a26c4;
+  --brand-soft: #4b34e312;
+  --background: var(--surface);
+  --foreground: var(--fg);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface: #0f0f10;
+  --raised: #18181a;
+  --fg: #f2f0eb;
+  --line: #2a2a2d;
+  --soft: #1f1f22;
+  --muted: #9b988f;
+  --skeleton: #232326;
+  --photo: #1c1c1f;
+  --danger: #ff7a66;
+  --brand: #6a5cff;
+  --brand-dark: #5a4bf0;
+  --brand-soft: #6a5cff22;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-onest), var(--font-figtree), sans-serif;
+  --font-hand: var(--font-kalam);
+  --font-logo: var(--font-jakarta);
+  --font-display: var(--font-cormorant), Georgia, serif;
+  /* A card lying on the paper: a hairline edge and a soft shadow under it. */
+  --shadow-paper: 0 1px 2px rgb(20 18 14 / 0.05), 0 8px 24px -12px rgb(20 18 14 / 0.18);
+  /* The violet ink printed slightly off its orange layer, like a risograph. */
+  --shadow-print: 0 1px 2px rgb(20 18 14 / 0.08);
+  --shadow-print-lg: 0 10px 24px -10px rgb(20 18 14 / 0.3);
+
+  /* ShopLink palette (from the logo sheet: Link Violet, Coral, Ink) */
+  --color-ink: #15142b;
+  --color-paper: #fdfcfa;
+  --color-field: #ececec;
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-tangerine: #ff6b3d;
+  --color-navy: #2a2857;
+
+  /* Shop pages: follow the theme */
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-brand-soft: var(--brand-soft);
+  --color-fg: var(--fg);
+  --color-line: var(--line);
+  --color-soft: var(--soft);
+  --color-muted: var(--muted);
+  --color-skeleton: var(--skeleton);
+  --color-photo: var(--photo);
+  --color-danger: var(--danger);
+
+  /* Motion: animate-rise, animate-drop, ... */
+  --animate-rise: rise 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  --animate-drop: drop 0.16s ease-out;
+  --animate-pop: pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-marquee: marquee 35s linear infinite;
+  --animate-shimmer: shimmer 1.5s ease-in-out infinite;
+  --animate-gradient: gradient 10s ease-in-out infinite;
+  --animate-word: word 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  --animate-shrink: shrink 4.5s linear both;
+  --animate-bob: bob 0.7s ease-in-out infinite;
+  /* "shoplink" letters hopping one after another, and the squares still ahead of the bag wiggling. */
+  --animate-letter: letter 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-wiggle: wiggle 1.2s ease-in-out infinite;
+  /* Dialogs: the dim fades in, the box pops up from slightly below. */
+  --animate-fade: fade 0.18s ease-out both;
+  --animate-dialog: dialog 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  /* Side panels slide in from the right edge. */
+  --animate-slide-in: slide-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes dialog {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+}
+
+
+@keyframes letter {
+  0%,
+  55%,
+  100% {
+    transform: none;
+  }
+  18% {
+    transform: translateY(-14px) rotate(-7deg);
+  }
+  32% {
+    transform: translateY(0) scale(1.12, 0.86);
+  }
+  42% {
+    transform: translateY(-3px) scale(0.97, 1.04);
+  }
+}
+@keyframes wiggle {
+  50% {
+    transform: rotate(14deg) scale(1.08);
+  }
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-3px) rotate(-4deg);
+  }
+}
+
+@keyframes shrink {
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+}
+@keyframes pop {
+  40% {
+    transform: scale(1.35);
+  }
+}
+@keyframes float {
+  50% {
+    transform: translate(10px, -14px) rotate(6deg);
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes gradient {
+  50% {
+    background-position: 100% 50%;
+  }
+}
+@keyframes word {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+}
+
+/* Browsers paint autofilled inputs with their own light colors; keep shop inputs in the theme's colors. */
+.shop-ui input:-webkit-autofill,
+.shop-ui input:-webkit-autofill:hover,
+.shop-ui input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--fg);
+  caret-color: var(--fg);
+  box-shadow: 0 0 0 1000px var(--soft) inset;
+  transition: background-color 9999s;
+}
+
+/* Sections fade up when scrolled into view (see <Reveal>). */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Anyone who asked their device for less motion gets none. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Handwritten headings: Kalam for Latin letters, Caveat for Russian and Tajik (Kalam has no Cyrillic). */
+.font-hand {
+  font-family: var(--font-kalam), var(--font-caveat), cursive;
+}
+
+/* Bright product photos glare on a dark page; a hairline frame settles them in. */
+:root[data-theme="dark"] .shop-ui img.bg-photo {
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+  filter: brightness(0.94);
+}
+
+:root[data-theme="dark"] ::selection {
+  background: rgb(106 92 255 / 0.45);
+}
+
+
+/* ——— Editorial helpers ——— */
+
+/* The key word of a headline: the serif's italic, in violet. */
+.marker {
+  font-style: italic;
+  color: var(--brand);
+}
+
+/* Retired handmade details: kept as no-ops so nothing breaks if one is still referenced. */
+.tape {
+  display: none;
+}
+
+/* Editorial redesign. */
