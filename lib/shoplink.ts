@@ -153,6 +153,8 @@ export interface AppNotification {
     reason?: ReportReason;
     reporterName?: string;
     status?: OrderStatus;
+    /** An order update meant for the seller (the buyer received it). */
+    forSeller?: boolean;
   };
   read: boolean;
   createdAt: string;
@@ -561,6 +563,8 @@ export function createShoplinkClient({
       byNumber: (orderNumber: string) => request<Order>("GET", `/api/orders/number/${encodeURIComponent(orderNumber)}`),
       /** Only while it is `new`. */
       cancel: (id: number) => request<Order>("POST", `/api/orders/${id}/cancel`),
+      /** "I got my order": the buyer marks an order on its way (shipped) as delivered. The sellers are notified. */
+      received: (id: number) => request<Order>("POST", `/api/orders/${id}/received`),
       /** Orders for the products I sell (only my items, `total` for my items). */
       sales: (query: { status?: OrderStatus } & PageQuery = {}) =>
         request<Page<Order>>("GET", "/api/orders/sales", undefined, query),

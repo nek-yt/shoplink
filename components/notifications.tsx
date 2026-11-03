@@ -24,6 +24,9 @@ function words(n: AppNotification, t: Translate): { title: string; text: string 
       text: [what, d.total !== undefined && formatPrice(d.total), d.orderNumber && t("order {number}", { number: d.orderNumber })].filter(Boolean).join(" · "),
     };
   }
+  if (n.type === "order" && d.forSeller && d.orderNumber) {
+    return { title: t("{buyer} received order {number}", { buyer: d.buyerName ?? t("The buyer"), number: d.orderNumber }), text: d.productName ?? "" };
+  }
   if (n.type === "order" && d.orderNumber && d.status) {
     const moved: Record<string, string> = {
       confirmed: "Your order {number} was confirmed",

@@ -18,7 +18,7 @@ const FLOW: OrderStatus[] = ["new", "confirmed", "shipped", "delivered"];
 export const STATUS_HELP: Record<OrderStatus, string> = {
   new: "The shop has your order and will confirm it soon. You can still cancel it.",
   confirmed: "The shop confirmed your order and is getting it ready.",
-  shipped: "Your order is on its way.",
+  shipped: "Your order is on its way. Press “I got my order” once it is in your hands.",
   delivered: "Delivered. Enjoy!",
   cancelled: "This order was cancelled. Its items went back to the shop.",
 };
@@ -121,7 +121,7 @@ export function OrderActions({ order, onChange, compact = false }: { order: Orde
   const { t } = useT();
   const { addManyToCart, notify } = useSession();
   const confirm = useConfirm();
-  const [busy, setBusy] = useState<"again" | "cancel" | null>(null);
+  const [busy, setBusy] = useState<"again" | "cancel" | "received" | null>(null);
   const items = order.items.filter((i) => i.productId !== null);
   const size = compact ? "h-10 px-4 text-sm" : "h-11 px-5";
 
@@ -151,8 +151,33 @@ export function OrderActions({ order, onChange, compact = false }: { order: Orde
     setBusy(null);
   }
 
+  // Only the buyer knows it arrived, so they close the order.
+  async function received() {
+    const yes = await confirm({
+      title: t("Got order {number}?", { number: order.orderNumber }),
+      text: "Mark it as delivered only once it is in your hands. The seller is told right away.",
+      confirmLabel: "Yes, I got it",
+      cancelLabel: "Not yet",
+      icon: "box",
+    });
+    if (!yes) return;
+    setBusy("received");
+    try {
+      onChange(await api.orders.received(order.id));
+      notify({ title: t("Enjoy your order!"), text: t("You can now rate what you bought.") });
+    } catch (err) {
+      notify({ title: t("Couldn't update the order"), text: t(errorMessage(err)) }, "error");
+    }
+    setBusy(null);
+  }
+
   return (
     <>
+      {order.status === "shipped" && (
+        <button type="button" onClick={received} disabled={busy !== null} className={`${BUTTON} ${size}`}>
+          <Icon name="check" className="size-4" /> {busy === "received" ? t("Saving…") : t("I got my order")}
+        </button>
+      )}
       {items.length > 0 && (
         <button type="button" onClick={buyAgain} disabled={busy !== null} className={`${isActive(order) ? BUTTON_SECONDARY : BUTTON} ${size}`}>
           <Icon name="cart" className="size-4" /> {busy === "again" ? t("Adding…") : t("Buy again")}

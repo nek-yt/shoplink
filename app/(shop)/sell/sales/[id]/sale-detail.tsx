@@ -27,11 +27,11 @@ const STEP: Record<OrderStatus, { headline: string; text: string; next?: { statu
     next: { status: "shipped", label: "Mark as shipped", icon: "truck" },
     todo: ["Pack the items carefully", "Write the order number on the package", "Send it to the address below"],
   },
+  // The buyer marks it delivered when it's in their hands; the seller gets a notification.
   shipped: {
     headline: "On its way to the buyer",
-    text: "When the buyer has it and has paid, mark the order as delivered.",
-    next: { status: "delivered", label: "Mark as delivered", icon: "box" },
-    todo: ["Keep your phone close for the courier", "Take the payment when it arrives", "Mark it as delivered"],
+    text: "The buyer marks it as delivered once it's in their hands. You'll get a notification.",
+    todo: ["Keep your phone close for the courier", "Take the payment when it arrives", "Wait for the buyer to confirm they got it"],
   },
   delivered: { headline: "Delivered — well done", text: "This sale is complete. The buyer can now rate the product.", todo: [] },
   cancelled: { headline: "Cancelled", text: "This order was cancelled. Its items went back into your stock.", todo: [] },

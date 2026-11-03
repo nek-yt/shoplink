@@ -1092,6 +1092,21 @@ export const RU: Dictionary = {
   "Your order {number} was delivered": "Ваш заказ {number} доставлен",
   "Your order {number} was cancelled": "Ваш заказ {number} отменён",
   "This order also has other sellers' items, so the shop's admin moves it": "В заказе есть товары других продавцов, поэтому его ведёт админ магазина",
+
+  // I got my order
+  "The buyer marks it as delivered once it's in their hands. You'll get a notification.": "Покупатель отметит доставку, когда получит заказ. Вам придёт уведомление.",
+  "Wait for the buyer to confirm they got it": "Дождитесь, пока покупатель подтвердит получение",
+  "Got order {number}?": "Заказ {number} получен?",
+  "Mark it as delivered only once it is in your hands. The seller is told right away.": "Отмечайте доставку, только когда заказ у вас в руках. Продавец сразу узнает.",
+  "Yes, I got it": "Да, получил(а)",
+  "Not yet": "Ещё нет",
+  "I got my order": "Я получил(а) заказ",
+  "Enjoy your order!": "Приятных покупок!",
+  "You can now rate what you bought.": "Теперь можно оценить покупку.",
+  "{buyer} received order {number}": "{buyer} получил(а) заказ {number}",
+  "The buyer": "Покупатель",
+  "Your order is on its way. Press “I got my order” once it is in your hands.": "Заказ в пути. Нажмите «Я получил(а) заказ», когда он будет у вас.",
+  "The buyer marks the order delivered when it arrives": "Доставку отмечает покупатель, когда получит заказ",
 };
 
 export const TG: Dictionary = {
@@ -2171,4 +2186,19 @@ export const TG: Dictionary = {
   "Your order {number} was delivered": "Фармоиши шумо {number} расонида шуд",
   "Your order {number} was cancelled": "Фармоиши шумо {number} бекор шуд",
   "This order also has other sellers' items, so the shop's admin moves it": "Дар фармоиш молҳои фурӯшандагони дигар ҳастанд, бинобар ин админ онро пеш мебарад",
+
+  // I got my order
+  "The buyer marks it as delivered once it's in their hands. You'll get a notification.": "Харидор пас аз гирифтани фармоиш онро расонидашуда ишора мекунад. Ба шумо огоҳинома меояд.",
+  "Wait for the buyer to confirm they got it": "Интизор шавед, то харидор гирифтанро тасдиқ кунад",
+  "Got order {number}?": "Фармоиши {number}-ро гирифтед?",
+  "Mark it as delivered only once it is in your hands. The seller is told right away.": "Танҳо вақте фармоиш дар дастатон бошад, ишора кунед. Фурӯшанда фавран огоҳ мешавад.",
+  "Yes, I got it": "Ҳа, гирифтам",
+  "Not yet": "Ҳоло не",
+  "I got my order": "Фармоишро гирифтам",
+  "Enjoy your order!": "Хариди хуш!",
+  "You can now rate what you bought.": "Акнун метавонед харидро баҳо диҳед.",
+  "{buyer} received order {number}": "{buyer} фармоиши {number}-ро гирифт",
+  "The buyer": "Харидор",
+  "Your order is on its way. Press “I got my order” once it is in your hands.": "Фармоиш дар роҳ аст. Вақте ба дастатон расид, «Фармоишро гирифтам»-ро пахш кунед.",
+  "The buyer marks the order delivered when it arrives": "Расониданро харидор ҳангоми гирифтан ишора мекунад",
 };
