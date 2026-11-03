@@ -325,27 +325,14 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     [wishlist, requireLogin, bump, notify],
   );
 
+  // Always ends on the login page. Other accounts saved on this device wait there, one tap away;
+  // switching to one is the account switcher's job, not logout's.
   const logout = useCallback(() => {
-    const leaving = user ? listAccounts().find((a) => a.id === user.id) : undefined;
     if (user) forgetAccount(user.id);
-    const next = listAccounts()
-      .filter((a) => !a.expired)
-      .sort((a, b) => b.lastUsed - a.lastUsed)[0];
-    if (next) {
-      // Other accounts on this device: carry on with the last used one instead of a login form.
-      setLoginToken(next.token);
-      notify({
-        title: t("Logged out of {name}", { name: leaving?.username ? `@${leaving.username}` : (user?.name ?? "") }),
-        text: t("Now using {name}", { name: next.username ? `@${next.username}` : next.name }),
-        image: next.avatarUrl,
-        kind: "info",
-      });
-      return;
-    }
     api.auth.logout();
     notify({ title: "Logged out", text: "See you soon!", kind: "info" });
     router.push("/login");
-  }, [router, notify, t, user]);
+  }, [router, notify, user]);
 
   const logoutAll = useCallback(() => {
     for (const a of listAccounts()) forgetAccount(a.id);
