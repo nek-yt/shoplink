@@ -107,6 +107,33 @@ export interface ProductSeller {
   name: string;
   socialUsername: string | null;
   avatarUrl: string;
+  /** Admins get the hammer badge next to their name. */
+  isAdmin?: boolean;
+}
+
+/** Why someone reported a product. */
+export const REPORT_REASONS = ["fake", "scam", "offensive", "wrong_info", "prohibited", "other"] as const;
+export type ReportReason = (typeof REPORT_REASONS)[number];
+/** open: waiting for an admin; resolved: the admin acted; dismissed: nothing wrong. */
+export type ReportStatus = "open" | "resolved" | "dismissed";
+
+export interface Report {
+  id: number;
+  productId: number;
+  product: Product;
+  reporterId: number;
+  reporterName: string;
+  reporterUsername: string | null;
+  reporterAvatarUrl: string;
+  reason: ReportReason;
+  note: string;
+  status: ReportStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ReportPage extends Page<Report> {
+  counts: Record<ReportStatus, number>;
 }
 
 export interface OrderItem {
@@ -513,6 +540,17 @@ export function createShoplinkClient({
       all: (query: { status?: OrderStatus; userId?: number } & PageQuery = {}) =>
         request<Page<Order>>("GET", "/api/orders/all", undefined, query),
       setStatus: (id: number, status: OrderStatus) => request<Order>("PATCH", `/api/orders/${id}/status`, { status }),
+    },
+    reports: {
+      /** Any logged-in user, not for your own products. Reporting again replaces your reason. */
+      create: (report: { productId: number; reason: ReportReason; note?: string }) =>
+        request<{ id: number; productId: number; reason: ReportReason; status: ReportStatus; createdAt: string }>("POST", "/api/reports", report),
+      // Admin only:
+      list: (query: { status?: ReportStatus } & PageQuery = {}) => request<ReportPage>("GET", "/api/reports", undefined, query),
+      update: (id: number, status: ReportStatus) => request<Report>("PATCH", `/api/reports/${id}`, { status }),
+      /** Closes every open report on the product at once. */
+      closeProduct: (productId: number, status: ReportStatus) =>
+        request<{ updated: number }>("POST", `/api/reports/product/${productId}`, { status }),
     },
     // Admin only:
     users: {

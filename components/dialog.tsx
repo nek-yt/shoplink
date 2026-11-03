@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 import { useT } from "@/lib/i18n";
 import { Icon, type IconName } from "./icons";
-import { BUTTON, BUTTON_SECONDARY } from "./ui";
+import { BUTTON, BUTTON_DANGER_SOLID, BUTTON_SECONDARY } from "./ui";
 
 export interface ConfirmOptions {
   /** Plain English (translated here) or already translated text with names in it. */
@@ -19,8 +19,6 @@ export interface ConfirmOptions {
 
 type Ask = (options: ConfirmOptions) => Promise<boolean>;
 
-const DANGER_SOLID =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-5 py-2.5 font-medium text-white transition-colors hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600";
 
 const ConfirmContext = createContext<Ask | null>(null);
 
@@ -120,7 +118,7 @@ function ConfirmDialog({ options, onAnswer }: { options: ConfirmOptions; onAnswe
             ref={confirmRef}
             type="button"
             onClick={() => onAnswer(true)}
-            className={`${danger ? DANGER_SOLID : BUTTON} sm:min-w-24`}
+            className={`${danger ? BUTTON_DANGER_SOLID : BUTTON} sm:min-w-24`}
           >
             {t(options.confirmLabel ?? "OK")}
           </button>

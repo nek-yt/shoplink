@@ -12,6 +12,7 @@ import { PastOrderRow, useOrderProducts } from "@/components/orders";
 import { useRequireLogin, useSession } from "@/components/session";
 import { OPEN_MENU_EVENT } from "@/components/shell";
 import { BUTTON, BUTTON_SECONDARY, ProductImage, Skeleton } from "@/components/ui";
+import { AdminBadge } from "@/components/admin-badge";
 
 const EDIT_HREF = "/settings?tab=account";
 // The profile buttons share the row, so they are tighter than the shop-wide BUTTON.
@@ -243,13 +244,11 @@ export function Profile() {
         <div className="relative">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={api.assetUrl(user.avatarUrl)} alt="" className="size-24 rounded-full object-cover ring-1 ring-line sm:size-28" />
-          {user.role === "admin" && (
-            <span className="absolute -right-1 -bottom-1 grid size-8 place-items-center rounded-full border-4 border-surface bg-brand text-white" title={t("Admin")}>
-              <Icon name="shield" className="size-3.5" />
-            </span>
-          )}
         </div>
-        <h1 className="mt-4 font-display text-4xl leading-tight font-semibold">{user.name}</h1>
+        <h1 className="mt-4 flex items-center justify-center gap-2 font-display text-4xl leading-tight font-semibold">
+          {user.name}
+          {user.role === "admin" && <AdminBadge className="size-7" />}
+        </h1>
         <p className="mt-1 flex flex-wrap items-center justify-center gap-2 text-muted">
           {user.socialUsername && <span className="font-medium text-fg">@{user.socialUsername}</span>}
           {guest && <span className="rounded-full bg-amber-400/15 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-300">{t("Guest")}</span>}

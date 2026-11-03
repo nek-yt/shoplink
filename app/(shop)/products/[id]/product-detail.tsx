@@ -12,6 +12,8 @@ import { Icon, type IconName } from "@/components/icons";
 import { ColorDot } from "@/components/pickers";
 import { Reviews } from "@/components/reviews";
 import { useSession } from "@/components/session";
+import { AdminBadge } from "@/components/admin-badge";
+import { ReportButton } from "@/components/report";
 import {
   BUTTON,
   BUTTON_SECONDARY,
@@ -241,6 +243,7 @@ function SellerChip({ sellerId, known }: { sellerId: number; known?: ProductSell
         <span className="font-semibold group-hover:text-brand">
           {shown ? (shown.socialUsername ? `@${shown.socialUsername}` : shown.name) : t("Seller #{id}", { id: sellerId })}
         </span>
+        {(isMe ? user?.role === "admin" : known?.isAdmin) && <AdminBadge className="ml-1 size-4" />}
         {isMe && <span className="ml-1.5 rounded bg-brand-soft px-1.5 py-0.5 text-xs font-semibold text-brand">{t("You")}</span>}
       </span>
       <Icon name="arrowRight" className="size-3.5 shrink-0 text-muted transition group-hover:translate-x-0.5 group-hover:text-brand" />
@@ -469,6 +472,9 @@ export function ProductDetail({ id }: { id: number }) {
               </li>
             ))}
           </ul>
+          <div className="mt-4 flex justify-end">
+            <ReportButton product={product} />
+          </div>
 
           {/* About the piece, and its details like a shop receipt */}
           <div className="mt-10">

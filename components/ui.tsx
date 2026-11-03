@@ -8,12 +8,16 @@ import { useT } from "@/lib/i18n";
 import type { OrderStatus, Product } from "@/lib/shoplink";
 import { Icon, type IconName } from "./icons";
 import { useSession } from "./session";
+import { AdminBadge } from "./admin-badge";
 
 // Class names shared by buttons and inputs across the shop: pills, ink first, violet on hover.
 export const BUTTON =
   "inline-flex items-center justify-center gap-2 rounded-full bg-fg px-6 py-2.5 font-medium text-surface transition duration-200 hover:bg-brand hover:text-white active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40";
 export const BUTTON_SECONDARY =
   "inline-flex items-center justify-center gap-2 rounded-full border border-line bg-raised px-6 py-2.5 font-medium transition duration-200 hover:border-fg active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40";
+/** For the one action that destroys something (delete, report): solid red. */
+export const BUTTON_DANGER_SOLID =
+  "inline-flex items-center justify-center gap-2 rounded-full bg-red-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-red-700 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40 dark:bg-red-500 dark:hover:bg-red-600";
 export const BUTTON_DANGER =
   "inline-flex items-center justify-center gap-2 rounded-full border border-danger/40 bg-raised px-6 py-2.5 font-medium text-danger transition-colors hover:bg-danger/5 disabled:pointer-events-none disabled:opacity-40";
 export const INPUT =
@@ -183,6 +187,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           <p className="truncate text-[15px] font-medium transition-colors group-hover:text-brand">{product.name}</p>
           <p className="truncate text-sm text-muted">
             {product.seller ? (product.seller.socialUsername ? `@${product.seller.socialUsername}` : product.seller.name) : "\u00a0"}
+            {product.seller?.isAdmin && <AdminBadge className="ml-1 size-3.5" />}
           </p>
         </div>
         <div className="flex shrink-0 items-center justify-between gap-2 sm:block sm:text-right">

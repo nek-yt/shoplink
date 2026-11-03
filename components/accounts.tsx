@@ -9,6 +9,7 @@ import { useT } from "@/lib/i18n";
 import { useConfirm } from "./dialog";
 import { Icon, type IconName } from "./icons";
 import { useSession } from "./session";
+import { AdminBadge } from "./admin-badge";
 
 const handle = (a: Pick<SavedAccount, "username" | "name">) => (a.username ? `@${a.username}` : a.name);
 const isMac = () => typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
@@ -77,7 +78,10 @@ export function AccountList({ onDone, tabIndex }: { onDone?: () => void; tabInde
             </span>
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate font-semibold">{user.name}</span>
+            <span className="flex items-center gap-1 font-semibold">
+              <span className="truncate">{user.name}</span>
+              {user.role === "admin" && <AdminBadge className="size-4" />}
+            </span>
             <span className="block truncate text-xs text-muted">{user.socialUsername ? `@${user.socialUsername}` : (user.email ?? user.phone)}</span>
           </span>
           <span className="text-xs font-medium text-brand">{t("Current")}</span>
@@ -252,7 +256,10 @@ export function AccountMenu() {
             <div className="flex items-center gap-3 px-4 pt-4 pb-3">
               <Face src={user.avatarUrl} alt="" className="size-10" />
               <Link href="/profile" onClick={close} className="min-w-0 flex-1 leading-tight hover:underline">
-                <span className="block truncate text-[15px] font-semibold">{user.socialUsername ?? user.name}</span>
+                <span className="flex items-center gap-1 text-[15px] font-semibold">
+                  <span className="truncate">{user.socialUsername ?? user.name}</span>
+                  {user.role === "admin" && <AdminBadge className="size-4" />}
+                </span>
                 <span className="block truncate text-muted">{user.socialUsername ? user.name : (user.email ?? user.phone)}</span>
               </Link>
               <span className="group/switch relative">
