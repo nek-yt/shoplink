@@ -152,6 +152,7 @@ export interface AppNotification {
     productName?: string;
     reason?: ReportReason;
     reporterName?: string;
+    status?: OrderStatus;
   };
   read: boolean;
   createdAt: string;
@@ -188,6 +189,8 @@ export interface Order {
   items: OrderItem[];
   createdAt: string;
   updatedAt: string;
+  /** Sales only: every item in the order is mine, so I move it through its steps myself. */
+  sellerCanManage?: boolean;
 }
 
 export interface Review {
@@ -563,6 +566,8 @@ export function createShoplinkClient({
         request<Page<Order>>("GET", "/api/orders/sales", undefined, query),
       /** One of my sales (only my items). */
       sale: (id: number) => request<Order>("GET", `/api/orders/sales/${id}`),
+      /** Moves one of my sales along; only when `sellerCanManage` (every item in it is mine). The buyer is notified. */
+      setSaleStatus: (id: number, status: OrderStatus) => request<Order>("PATCH", `/api/orders/sales/${id}/status`, { status }),
       // Admin only:
       all: (query: { status?: OrderStatus; userId?: number } & PageQuery = {}) =>
         request<Page<Order>>("GET", "/api/orders/all", undefined, query),

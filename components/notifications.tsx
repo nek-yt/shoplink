@@ -24,6 +24,15 @@ function words(n: AppNotification, t: Translate): { title: string; text: string 
       text: [what, d.total !== undefined && formatPrice(d.total), d.orderNumber && t("order {number}", { number: d.orderNumber })].filter(Boolean).join(" · "),
     };
   }
+  if (n.type === "order" && d.orderNumber && d.status) {
+    const moved: Record<string, string> = {
+      confirmed: "Your order {number} was confirmed",
+      shipped: "Your order {number} is on its way",
+      delivered: "Your order {number} was delivered",
+      cancelled: "Your order {number} was cancelled",
+    };
+    return { title: t(moved[d.status] ?? n.title, { number: d.orderNumber }), text: d.productName ?? "" };
+  }
   if (n.type === "report" && d.productName) {
     const reason = d.reason && REPORT_REASON_LABELS[d.reason] ? t(REPORT_REASON_LABELS[d.reason].label) : (d.reason ?? "");
     return {
@@ -96,9 +105,9 @@ function Row({ n, onOpen }: { n: AppNotification; onOpen: () => void }) {
           </span>
         )}
         <span
-          className={`absolute -right-1 -bottom-1 grid size-5 place-items-center rounded-full border-2 border-raised text-white ${n.type === "report" ? "bg-danger" : "bg-emerald-500"}`}
+          className={`absolute -right-1 -bottom-1 grid size-5 place-items-center rounded-full border-2 border-raised text-white ${n.type === "report" ? "bg-danger" : n.type === "order" ? "bg-brand" : "bg-emerald-500"}`}
         >
-          <Icon name={n.type === "report" ? "flag" : "cart"} className="size-2.5" />
+          <Icon name={n.type === "report" ? "flag" : n.type === "order" ? "truck" : "cart"} className="size-2.5" />
         </span>
       </span>
       <span className="min-w-0 flex-1">
