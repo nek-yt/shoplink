@@ -8,6 +8,7 @@ import { useT } from "@/lib/i18n";
 import { Icon, Logo, LogoFull, type IconName } from "./icons";
 import { AccountList, AccountMenu, Face, useAccountShortcuts } from "./accounts";
 import { LanguageMenu, LanguageSwitch } from "./language";
+import { NotificationBell } from "./notifications";
 import { TopLoader } from "./loader";
 import { SearchBar } from "./search";
 import { useSession } from "./session";
@@ -280,6 +281,7 @@ export function Topbar() {
           <span className="hidden md:block">
             <LanguageMenu />
           </span>
+          <NotificationBell />
           <Link href="/wishlist" aria-label={t("Wishlist")} className="relative rounded-md p-2 hover:bg-soft">
             <Icon name="heart" className="size-7" />
             <CountBadge count={pathname === "/wishlist" ? 0 : unseen.wishlist} />

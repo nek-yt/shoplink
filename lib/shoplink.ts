@@ -132,6 +132,31 @@ export interface Report {
   updatedAt: string;
 }
 
+/** Something that happened for you: a sale of your product, a reported product (admins). Arrives live too. */
+export interface AppNotification {
+  id: number;
+  type: "sale" | "report" | string;
+  /** English text; the shop writes its own from `data` in the reader’s language. */
+  title: string;
+  body: string;
+  link: string | null;
+  imageUrl: string | null;
+  data: {
+    buyerName?: string;
+    items?: { name: string; quantity: number }[];
+    quantity?: number;
+    total?: number;
+    orderNumber?: string;
+    orderId?: number;
+    productId?: number;
+    productName?: string;
+    reason?: ReportReason;
+    reporterName?: string;
+  };
+  read: boolean;
+  createdAt: string;
+}
+
 export interface ReportPage extends Page<Report> {
   counts: Record<ReportStatus, number>;
 }
@@ -188,6 +213,8 @@ export interface ProductComment {
   userName: string;
   userUsername: string | null;
   userAvatarUrl: string;
+  /** Admins get the hammer badge next to their name. */
+  userIsAdmin?: boolean;
   text: string;
   edited: boolean;
   createdAt: string;
@@ -540,6 +567,13 @@ export function createShoplinkClient({
       all: (query: { status?: OrderStatus; userId?: number } & PageQuery = {}) =>
         request<Page<Order>>("GET", "/api/orders/all", undefined, query),
       setStatus: (id: number, status: OrderStatus) => request<Order>("PATCH", `/api/orders/${id}/status`, { status }),
+    },
+    notifications: {
+      list: (query: PageQuery = {}) => request<Page<AppNotification> & { unread: number }>("GET", "/api/notifications", undefined, query),
+      /** The given ones, or all of them. */
+      markRead: (ids?: number[]) => request<{ unread: number }>("POST", "/api/notifications/read", ids ? { ids } : {}),
+      /** Live stream (Server-Sent Events) address; EventSource can’t send headers, so the token goes in the URL. */
+      streamUrl: (token: string) => `${root}/api/notifications/stream?token=${encodeURIComponent(token)}`,
     },
     reports: {
       /** Any logged-in user, not for your own products. Reporting again replaces your reason. */

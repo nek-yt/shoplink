@@ -12,6 +12,7 @@ import { useConfirm } from "./dialog";
 import { Icon } from "./icons";
 import { loginHref, useSession } from "./session";
 import { BUTTON_SECONDARY, Skeleton } from "./ui";
+import { AdminBadge } from "./admin-badge";
 
 const TEXT_MAX = 1000;
 const PAGE = 10;
@@ -172,6 +173,8 @@ type Entry = {
   name: string;
   username: string | null;
   avatarUrl: string;
+  /** Admins get the hammer badge next to their name. */
+  isAdmin: boolean;
   text: string;
   edited: boolean;
   createdAt: string;
@@ -185,6 +188,7 @@ const fromComment = (c: ProductComment): Entry => ({
   name: c.userName,
   username: c.userUsername,
   avatarUrl: c.userAvatarUrl,
+  isAdmin: c.userIsAdmin ?? false,
   text: c.text,
   edited: c.edited,
   createdAt: c.createdAt,
@@ -198,6 +202,7 @@ const fromReview = (r: Review): Entry => ({
   name: r.userName,
   username: null,
   avatarUrl: r.userAvatarUrl,
+  isAdmin: false,
   text: r.comment,
   edited: new Date(r.updatedAt).getTime() - new Date(r.createdAt).getTime() > 1000,
   createdAt: r.createdAt,
@@ -230,9 +235,12 @@ function CommentItem({
       <img src={api.assetUrl(entry.avatarUrl)} alt="" className="size-9 shrink-0 rounded-full object-cover" />
       <div className="min-w-0 flex-1">
         <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
-          <span className="font-semibold">{entry.username ? `@${entry.username}` : entry.name}</span>
+          <span className="inline-flex items-center gap-1 font-semibold">
+            {entry.username ? `@${entry.username}` : entry.name}
+            {/* Reviews don’t say who is an admin, but your own entries are known. */}
+            {(entry.isAdmin || (mine && user?.role === "admin")) && <AdminBadge className="size-3.5" />}
+          </span>
           {isSeller && <span className="rounded bg-tangerine/15 px-1.5 py-px text-[11px] font-bold text-tangerine">{t("The seller")}</span>}
-          {mine && <span className="rounded bg-brand-soft px-1.5 py-px text-[11px] font-bold text-brand">{t("You")}</span>}
           {rating !== undefined && <Stars value={rating} className="size-3.5" />}
           <time dateTime={entry.createdAt} title={formatDate(entry.createdAt, locale)} className="text-muted">
             {timeAgo(entry.createdAt, locale)}

@@ -452,6 +452,7 @@ export function ProductDetail({ id }: { id: number }) {
                 >
                   <Icon name="heart" filled={saved} className="size-5" />
                 </button>
+                <ReportButton product={product} variant="icon" />
               </div>
             </div>
           )}
@@ -472,9 +473,6 @@ export function ProductDetail({ id }: { id: number }) {
               </li>
             ))}
           </ul>
-          <div className="mt-4 flex justify-end">
-            <ReportButton product={product} />
-          </div>
 
           {/* About the piece, and its details like a shop receipt */}
           <div className="mt-10">
